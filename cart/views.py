@@ -12,17 +12,17 @@ from .models import Cart
 @require_POST
 def cart_add(request, product_id):
     """This view is responsible for add or updating a cart."""
-    product = get_object_or_404(Product, id=product_id)
     cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
     form = CartAddProductForm(request.POST)
     if form.is_valid():
-        cd = form.cleaned_data()
+        cd = form.cleaned_data
         cart.add(
             product=product,
             quantity=cd["quantity"],
-            override_quantity=cd["override_quantity"],
+            override_quantity=cd["override"],
         )
-    return redirect("cart:car_detail")
+    return redirect("cart:cart_detail")
 
 
 @require_POST
@@ -34,8 +34,12 @@ def cart_remove(request, product_id):
     return redirect("cart:cart_detail")
 
 
-@require_POST
 def cart_detail(request):
     "This view will provide a detailed information about user's cart"
     cart = Cart(request)
+    for item in cart:
+        item["update_quantity_form"] = CartAddProductForm(
+            initial={"quantity": item["quantity"], "override": True}
+        )
+        cart.lab()
     return render(request, "cart/detail.html", {"cart": cart})

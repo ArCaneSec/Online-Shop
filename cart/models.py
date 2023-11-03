@@ -17,7 +17,11 @@ class Cart:
     def __init__(self, request: HttpRequest) -> None:
         """Initializing the cart class"""
         self.session = request.session
-        self.cart: dict = self.session.get(settings.CART_SESSION_ID, {})
+        cart = self.session.get(settings.CART_SESSION_ID)
+        if not cart:
+            # save an empty cart in the session
+            cart = self.session[settings.CART_SESSION_ID] = {}
+        self.cart = cart
 
     def __str__(self) -> str:
         return super().__str__()
@@ -87,3 +91,6 @@ class Cart:
         """Deleting all items in cart"""
         del self.session[settings.CART_SESSION_ID]
         self.save()
+
+    def lab(self):
+        print(self.cart)
