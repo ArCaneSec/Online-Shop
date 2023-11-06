@@ -4,7 +4,7 @@ from django.views.decorators.http import require_POST
 from shop.models import Product
 
 from .forms import CartAddProductForm
-from .models import Cart
+from .cart import Cart
 
 # Create your views here.
 
@@ -41,5 +41,4 @@ def cart_detail(request):
         item["update_quantity_form"] = CartAddProductForm(
             initial={"quantity": item["quantity"], "override": True}
         )
-        cart.lab()
     return render(request, "cart/detail.html", {"cart": cart})
