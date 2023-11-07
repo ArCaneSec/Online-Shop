@@ -3,7 +3,7 @@ from django import forms
 from .models import Order
 
 
-class OrderCreateForm(forms.Form):
+class OrderCreateForm(forms.ModelForm):
     """This form responsible for creating orders."""
     class Meta:
         model = Order
