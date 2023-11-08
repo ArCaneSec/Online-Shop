@@ -3,7 +3,8 @@ from django.shortcuts import render
 from cart.cart import Cart
 
 from .forms import OrderCreateForm
-from .models import Order, OrderItem
+from .models import OrderItem
+from .tasks import order_created
 
 # Create your views here.
 
@@ -18,6 +19,8 @@ def order_create(request):
         form = OrderCreateForm(request.POST)
         if form.is_valid():
             order = form.save()
+            # Launching async task to send succesful message email.
+            order_created.delay(order.id)
             for item in cart:
                 OrderItem.objects.create(
                     order=order,
