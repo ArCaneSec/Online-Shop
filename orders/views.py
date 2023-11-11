@@ -20,7 +20,6 @@ def order_create(request):
         if form.is_valid():
             order = form.save()
             # Launching async task to send succesful message email.
-            order_created.delay(order.id)
             for item in cart:
                 OrderItem.objects.create(
                     order=order,
@@ -29,6 +28,7 @@ def order_create(request):
                     quantity=item["quantity"],
                 )
             cart.clear()
+            order_created.delay(order.id)
         return render(request, "orders/order/created.html", {"order": order})
     else:
         form = OrderCreateForm()

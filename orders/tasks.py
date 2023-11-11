@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from .models import Order
 
 
-@shared_task
+@shared_task()
 def order_created(order_id: int):
     """
     This task is responsible to send notification via email
@@ -17,5 +17,6 @@ def order_created(order_id: int):
         "you have succesfully placed an order."
         f"your order id: {order.id}"
     )
-    mail_sent = send_mail(subject, message, "admin@shop.com", [order.email])
+    mail_sent = send_mail(subject, message, "admin@shop.com", [order.email], fail_silently=False)
+    print("test")
     return mail_sent

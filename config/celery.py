@@ -6,8 +6,7 @@ from celery import Celery
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 # Creating instance of the application.
-broker_url = "amqp://arcane:123@localhost:5672"
-app = Celery("myshop", broker=broker_url)
+app = Celery("config")
 
 # Loading all custom configuration.
 app.config_from_object("django.conf:settings", namespace="CELERY")
